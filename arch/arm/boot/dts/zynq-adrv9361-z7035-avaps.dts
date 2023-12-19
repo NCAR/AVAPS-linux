@@ -1,0 +1,329 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * AD9361-Z7035 System on Module (SOM) SDR - Breakout Carrier (CMOS)
+ * Link: https://www.analog.com/ADRV9361-Z7035
+ * Link: https://wiki.analog.com/resources/eval/user-guides/adrv936x_rfsom
+ *
+ * hdl_project: <adrv9361z7035/ccbob_cmos>
+ * board_revision: <>
+ *
+ * Copyright 2016-2019 Analog Devices Inc.
+ */
+#include  "zynq-adrv9361-z7035-bob-cmos.dts"
+
+/*
+ * Uncomment these aliases when the 3 16550 UARTS are
+ * instantiated; this is a naming convention required by
+ * the Linux driver.
+ */
+&aliases {
+	serial1 = &axi_uart16550_gps;
+	serial2 = &axi_uart16550_rs232;
+	serial3 = &axi_uart16550_sonde;
+};
+
+&fpga_axi {
+/* 
+Add AVAPS specific devices here.
+*/
+		AVAPSII_rcvr_0: AVAPSII_rcvr@43c00000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c00000 0x10000>;
+		};
+		misc_clk_0: misc_clk_0 {
+			#clock-cells = <0>;
+			clock-frequency = <100000000>;
+			compatible = "fixed-clock";
+		};
+		AVAPSII_rcvr_1: AVAPSII_rcvr@43c10000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c10000 0x10000>;
+		};
+		AVAPSII_rcvr_2: AVAPSII_rcvr@43c20000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c20000 0x10000>;
+		};
+		AVAPSII_rcvr_3: AVAPSII_rcvr@43c30000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c30000 0x10000>;
+		};
+		AVAPSII_rcvr_4: AVAPSII_rcvr@43c40000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c40000 0x10000>;
+		};
+		AVAPSII_rcvr_5: AVAPSII_rcvr@43c50000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c50000 0x10000>;
+		};
+		AVAPSII_rcvr_6: AVAPSII_rcvr@43c60000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c60000 0x10000>;
+		};
+		AVAPSII_rcvr_7: AVAPSII_rcvr@43c70000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
+			clocks = <&misc_clk_0>, <&misc_clk_0>;
+			compatible = "xlnx,AVAPSII-rcvr-1.2";
+			reg = <0x43c70000 0x10000>;
+		};
+		axi_gpio_launcher: gpio@41210000 {
+			#gpio-cells = <2>;
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-gpio-2.0", "xlnx,xps-gpio-1.00.a";
+			gpio-controller ;
+			reg = <0x41210000 0x10000>;
+			xlnx,all-inputs = <0x1>;
+			xlnx,all-inputs-2 = <0x0>;
+			xlnx,all-outputs = <0x0>;
+			xlnx,all-outputs-2 = <0x1>;
+			xlnx,dout-default = <0x00000000>;
+			xlnx,dout-default-2 = <0x00000000>;
+			xlnx,gpio-width = <0x2>;
+			xlnx,gpio2-width = <0x1>;
+			xlnx,interrupt-present = <0x0>;
+			xlnx,is-dual = <0x1>;
+			xlnx,tri-default = <0xFFFFFFFF>;
+			xlnx,tri-default-2 = <0xFFFFFFFF>;
+		};
+		axi_iic_carrier: i2c@41610000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-iic-2.1", "xlnx,xps-iic-2.00.a";
+			interrupt-names = "iic2intc_irpt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 52 4>;
+			reg = <0x41610000 0x10000>;
+		};
+		axi_uart16550_gps: serial@43d00000 {
+			clock-frequency = <100000000>;
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,xps-uart16550-2.00.a", "ns16550a";
+			current-speed = <115200>;
+			device_type = "serial";
+			interrupt-names = "ip2intc_irpt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 36 4>;
+			port-number = <0>;
+			reg = <0x43d00000 0x10000>;
+			reg-offset = <0x1000>;
+			reg-shift = <2>;
+			xlnx,external-xin-clk-hz = <0x17d7840>;
+			xlnx,external-xin-clk-hz-d = <0x19>;
+			xlnx,has-external-rclk = <0x0>;
+			xlnx,has-external-xin = <0x0>;
+			xlnx,is-a-16550 = <0x1>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,sim-device = "VERSAL_AI_CORE_ES1";
+			xlnx,use-modem-ports = <0x1>;
+			xlnx,use-user-ports = <0x1>;
+		};
+		axi_uart16550_rs232: serial@43d10000 {
+			clock-frequency = <100000000>;
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,xps-uart16550-2.00.a", "ns16550a";
+			current-speed = <115200>;
+			device_type = "serial";
+			interrupt-names = "ip2intc_irpt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 32 4>;
+			port-number = <1>;
+			reg = <0x43d10000 0x10000>;
+			reg-offset = <0x1000>;
+			reg-shift = <2>;
+			xlnx,external-xin-clk-hz = <0x17d7840>;
+			xlnx,external-xin-clk-hz-d = <0x19>;
+			xlnx,has-external-rclk = <0x0>;
+			xlnx,has-external-xin = <0x0>;
+			xlnx,is-a-16550 = <0x1>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,sim-device = "VERSAL_AI_CORE_ES1";
+			xlnx,use-modem-ports = <0x1>;
+			xlnx,use-user-ports = <0x1>;
+		};
+		axi_uart16550_sonde: serial@43d20000 {
+			clock-frequency = <100000000>;
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,xps-uart16550-2.00.a", "ns16550a";
+			current-speed = <115200>;
+			device_type = "serial";
+			interrupt-names = "ip2intc_irpt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 34 4>;
+			port-number = <2>;
+			reg = <0x43d20000 0x10000>;
+			reg-offset = <0x1000>;
+			reg-shift = <2>;
+			xlnx,external-xin-clk-hz = <0x17d7840>;
+			xlnx,external-xin-clk-hz-d = <0x19>;
+			xlnx,has-external-rclk = <0x0>;
+			xlnx,has-external-xin = <0x0>;
+			xlnx,is-a-16550 = <0x1>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,sim-device = "VERSAL_AI_CORE_ES1";
+			xlnx,use-modem-ports = <0x1>;
+			xlnx,use-user-ports = <0x1>;
+		};
+		axi_uartlite_0: serial@42c00000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 35 1>;
+			port-number = <3>;
+			reg = <0x42c00000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_1: serial@42c10000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 54 1>;
+			port-number = <4>;
+			reg = <0x42c10000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_2: serial@42c20000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 53 1>;
+			port-number = <5>;
+			reg = <0x42c20000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_3: serial@42c30000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 55 1>;
+			port-number = <6>;
+			reg = <0x42c30000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_4: serial@42c40000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 56 1>;
+			port-number = <7>;
+			reg = <0x42c40000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_5: serial@42c50000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 57 1>;
+			port-number = <8>;
+			reg = <0x42c50000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_6: serial@42c60000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 58 1>;
+			port-number = <9>;
+			reg = <0x42c60000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+		axi_uartlite_7: serial@42c70000 {
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
+			current-speed = <2400>;
+			device_type = "serial";
+			interrupt-names = "interrupt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 59 1>;
+			port-number = <10>;
+			reg = <0x42c70000 0x10000>;
+			xlnx,baudrate = <0x960>;
+			xlnx,data-bits = <0x8>;
+			xlnx,odd-parity = <0x0>;
+			xlnx,s-axi-aclk-freq-hz-d = "100.0";
+			xlnx,use-parity = <0x0>;
+		};
+};
