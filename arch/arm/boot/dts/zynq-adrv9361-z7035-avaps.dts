@@ -11,11 +11,9 @@
  */
 #include  "zynq-adrv9361-z7035-bob-cmos.dts"
 
-/*
- * Uncomment these aliases when the 3 16550 UARTS are
- * instantiated; this is a naming convention required by
- * the Linux driver.
- */
+/delete-node/ &tx_dma;
+/delete-node/ &cf_ad9361_dac_core_0;
+
 &aliases {
 	serial1 = &axi_uart16550_gps;
 	serial2 = &axi_uart16550_rs232;
@@ -23,9 +21,6 @@
 };
 
 &fpga_axi {
-/* 
-Add AVAPS specific devices here.
-*/
 		AVAPSII_rcvr_0: AVAPSII_rcvr@43c00000 {
 			/* This is a place holder node for a custom IP, user may need to update the entries */
 			clock-names = "AXI4_Lite_ACLK", "IPCORE_CLK";
@@ -87,6 +82,46 @@ Add AVAPS specific devices here.
 			compatible = "xlnx,AVAPSII-rcvr-1.2";
 			reg = <0x43c70000 0x10000>;
 		};
+		axi_iic_carrier: i2c@41610000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-iic-2.1", "xlnx,xps-iic-2.00.a";
+			interrupt-names = "iic2intc_irpt";
+			interrupt-parent = <&intc>;
+			interrupts = <0 36 4>;
+			reg = <0x41610000 0x10000>;
+			ina220_12v@40 {
+				compatible = "ti,ina220";
+				reg = <0x40>;
+				shunt-resistor = <10000>;
+				label = "INA220_12V";
+			};
+			ina220_5v@41 {
+				compatible = "ti,ina220";
+				reg = <0x41>;
+				shunt-resistor = <10000>;
+			};
+			ina220_3v3@43 {
+				compatible = "ti,ina220";
+				reg = <0x43>;
+				shunt-resistor = <10000>;
+			};
+			ina220_1v8@44 {
+				compatible = "ti,ina220";
+				reg = <0x44>;
+				shunt-resistor = <10000>;
+			};
+			eeprom@57 {
+				compatible = "at24,24c32";
+				reg = <0x57>;
+				pagesize = <16>;
+				size = <2048>;
+				address-width = <8>;
+			};
+
+		};
 		axi_gpio_launcher: gpio@41210000 {
 			#gpio-cells = <2>;
 			clock-names = "s_axi_aclk";
@@ -107,17 +142,6 @@ Add AVAPS specific devices here.
 			xlnx,tri-default = <0xFFFFFFFF>;
 			xlnx,tri-default-2 = <0xFFFFFFFF>;
 		};
-		axi_iic_carrier: i2c@41610000 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			clock-names = "s_axi_aclk";
-			clocks = <&clkc 15>;
-			compatible = "xlnx,axi-iic-2.1", "xlnx,xps-iic-2.00.a";
-			interrupt-names = "iic2intc_irpt";
-			interrupt-parent = <&intc>;
-			interrupts = <0 52 4>;
-			reg = <0x41610000 0x10000>;
-		};
 		axi_uart16550_gps: serial@43d00000 {
 			clock-frequency = <100000000>;
 			clock-names = "s_axi_aclk";
@@ -127,8 +151,8 @@ Add AVAPS specific devices here.
 			device_type = "serial";
 			interrupt-names = "ip2intc_irpt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 36 4>;
-			port-number = <0>;
+			interrupts = <0 52 4>;
+			port-number = <1>;
 			reg = <0x43d00000 0x10000>;
 			reg-offset = <0x1000>;
 			reg-shift = <2>;
@@ -151,8 +175,8 @@ Add AVAPS specific devices here.
 			device_type = "serial";
 			interrupt-names = "ip2intc_irpt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 32 4>;
-			port-number = <1>;
+			interrupts = <0 56 4>;
+			port-number = <2>;
 			reg = <0x43d10000 0x10000>;
 			reg-offset = <0x1000>;
 			reg-shift = <2>;
@@ -175,8 +199,8 @@ Add AVAPS specific devices here.
 			device_type = "serial";
 			interrupt-names = "ip2intc_irpt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 34 4>;
-			port-number = <2>;
+			interrupts = <0 54 4>;
+			port-number = <3>;
 			reg = <0x43d20000 0x10000>;
 			reg-offset = <0x1000>;
 			reg-shift = <2>;
@@ -198,8 +222,8 @@ Add AVAPS specific devices here.
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 35 1>;
-			port-number = <3>;
+			interrupts = <0 53 1>;
+			port-number = <0>;
 			reg = <0x42c00000 0x10000>;
 			xlnx,baudrate = <0x960>;
 			xlnx,data-bits = <0x8>;
@@ -215,8 +239,8 @@ Add AVAPS specific devices here.
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 54 1>;
-			port-number = <4>;
+			interrupts = <0 34 1>;
+			port-number = <1>;
 			reg = <0x42c10000 0x10000>;
 			xlnx,baudrate = <0x960>;
 			xlnx,data-bits = <0x8>;
@@ -228,14 +252,14 @@ Add AVAPS specific devices here.
 			clock-names = "s_axi_aclk";
 			clocks = <&clkc 15>;
 			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
-			current-speed = <2400>;
+			current-speed = <9600>;
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 53 1>;
-			port-number = <5>;
+			interrupts = <0 35 1>;
+			port-number = <2>;
 			reg = <0x42c20000 0x10000>;
-			xlnx,baudrate = <0x960>;
+			xlnx,baudrate = <0x2580>;
 			xlnx,data-bits = <0x8>;
 			xlnx,odd-parity = <0x0>;
 			xlnx,s-axi-aclk-freq-hz-d = "100.0";
@@ -245,14 +269,14 @@ Add AVAPS specific devices here.
 			clock-names = "s_axi_aclk";
 			clocks = <&clkc 15>;
 			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
-			current-speed = <2400>;
+			current-speed = <9600>;
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 55 1>;
-			port-number = <6>;
+			interrupts = <0 33 1>;
+			port-number = <3>;
 			reg = <0x42c30000 0x10000>;
-			xlnx,baudrate = <0x960>;
+			xlnx,baudrate = <0x2580>;
 			xlnx,data-bits = <0x8>;
 			xlnx,odd-parity = <0x0>;
 			xlnx,s-axi-aclk-freq-hz-d = "100.0";
@@ -262,14 +286,14 @@ Add AVAPS specific devices here.
 			clock-names = "s_axi_aclk";
 			clocks = <&clkc 15>;
 			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
-			current-speed = <2400>;
+			current-speed = <9600>;
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 56 1>;
-			port-number = <7>;
+			interrupts = <0 32 1>;
+			port-number = <4>;
 			reg = <0x42c40000 0x10000>;
-			xlnx,baudrate = <0x960>;
+			xlnx,baudrate = <0x2580>;
 			xlnx,data-bits = <0x8>;
 			xlnx,odd-parity = <0x0>;
 			xlnx,s-axi-aclk-freq-hz-d = "100.0";
@@ -279,14 +303,14 @@ Add AVAPS specific devices here.
 			clock-names = "s_axi_aclk";
 			clocks = <&clkc 15>;
 			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
-			current-speed = <2400>;
+			current-speed = <9600>;
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 57 1>;
-			port-number = <8>;
+			interrupts = <0 31 1>;
+			port-number = <5>;
 			reg = <0x42c50000 0x10000>;
-			xlnx,baudrate = <0x960>;
+			xlnx,baudrate = <0x2580>;
 			xlnx,data-bits = <0x8>;
 			xlnx,odd-parity = <0x0>;
 			xlnx,s-axi-aclk-freq-hz-d = "100.0";
@@ -296,14 +320,14 @@ Add AVAPS specific devices here.
 			clock-names = "s_axi_aclk";
 			clocks = <&clkc 15>;
 			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
-			current-speed = <2400>;
+			current-speed = <9600>;
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 58 1>;
-			port-number = <9>;
+			interrupts = <0 30 1>;
+			port-number = <6>;
 			reg = <0x42c60000 0x10000>;
-			xlnx,baudrate = <0x960>;
+			xlnx,baudrate = <0x2580>;
 			xlnx,data-bits = <0x8>;
 			xlnx,odd-parity = <0x0>;
 			xlnx,s-axi-aclk-freq-hz-d = "100.0";
@@ -313,17 +337,17 @@ Add AVAPS specific devices here.
 			clock-names = "s_axi_aclk";
 			clocks = <&clkc 15>;
 			compatible = "xlnx,axi-uartlite-2.0", "xlnx,xps-uartlite-1.00.a";
-			current-speed = <2400>;
+			current-speed = <9600>;
 			device_type = "serial";
 			interrupt-names = "interrupt";
 			interrupt-parent = <&intc>;
-			interrupts = <0 59 1>;
-			port-number = <10>;
+			interrupts = <0 29 1>;
+			port-number = <7>;
 			reg = <0x42c70000 0x10000>;
-			xlnx,baudrate = <0x960>;
+			xlnx,baudrate = <0x2580>;
 			xlnx,data-bits = <0x8>;
 			xlnx,odd-parity = <0x0>;
 			xlnx,s-axi-aclk-freq-hz-d = "100.0";
 			xlnx,use-parity = <0x0>;
 		};
-};
+	};
