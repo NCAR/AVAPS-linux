@@ -1,0 +1,15 @@
+#
+# dma-proxy
+#
+
+menuconfig DMA_PROXY
+	tristate "dma-proxy (Userspace dma proxy driver"
+	depends on OF
+	help
+	  Enable this to allow dma-proxy to be built.
+	  dma-proxy is a linux device driver that allocates contiguous
+	  memory blocks in the kernel space as DMA buffers and
+	  controls dma transfers using them, from the user space.
+
+	  If you don't know what to do here, say N.
+
