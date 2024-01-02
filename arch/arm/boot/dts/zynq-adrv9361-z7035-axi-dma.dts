@@ -1,0 +1,59 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * AD9361-Z7035 System on Module (SOM) SDR - Breakout Carrier (CMOS)
+ * Link: https://www.analog.com/ADRV9361-Z7035
+ * Link: https://wiki.analog.com/resources/eval/user-guides/adrv936x_rfsom
+ *
+ * hdl_project: <adrv9361z7035/ccbob_cmos>
+ * board_revision: <>
+ *
+ * Copyright 2016-2019 Analog Devices Inc.
+ */
+#include  "zynq-adrv9361-z7035-bob-cmos.dts"
+
+&fpga_axi {
+		misc_clk_0: misc_clk_0 {
+			#clock-cells = <0>;
+			clock-frequency = <100000000>;
+			compatible = "fixed-clock";
+		};
+		dma_proxy {
+			compatible = "xlnx,dma_proxy";
+			dmas = <&axi_dma_0 0 &axi_dma_0 1>;
+			dma-names = "dma-proxy-tx", "dma-proxy-rx";
+		};
+		axi_dma_0: dma@40400000 {
+			#dma-cells = <1>;
+			clock-names = "m_axi_mm2s_aclk", "m_axi_s2mm_aclk", "m_axi_sg_aclk", "s_axi_lite_aclk";
+			clocks = <&clkc 15>, <&clkc 15>, <&clkc 15>, <&clkc 15>;
+			compatible = "xlnx,axi-dma-7.1", "xlnx,axi-dma-1.00.a";
+			interrupt-names = "mm2s_introut", "s2mm_introut";
+			interrupt-parent = <&intc>;
+			interrupts = <0 54 4 0 59 4>;
+			reg = <0x40400000 0x10000>;
+			xlnx,addrwidth = <0x20>;
+			xlnx,include-sg ;
+			xlnx,sg-length-width = <0xe>;
+			dma-channel@40400000 {
+				compatible = "xlnx,axi-dma-mm2s-channel";
+				dma-channels = <0x1>;
+				interrupts = <0 54 4>;
+				xlnx,datawidth = <0x20>;
+				xlnx,device-id = <0x0>;
+			};
+			dma-channel@40400030 {
+				compatible = "xlnx,axi-dma-s2mm-channel";
+				dma-channels = <0x1>;
+				interrupts = <0 59 4>;
+				xlnx,datawidth = <0x20>;
+				xlnx,device-id = <0x0>;
+			};
+		};
+		axi_pz_xcvrlb: axi_xcvrlb@44a60000 {
+			/* This is a place holder node for a custom IP, user may need to update the entries */
+			clock-names = "s_axi_aclk";
+			clocks = <&clkc 15>;
+			compatible = "xlnx,axi-xcvrlb-1.0";
+			reg = <0x44a60000 0x1000>;
+		};
+	};
